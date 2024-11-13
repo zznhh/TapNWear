@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+
+        #receipt-details {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 380px;
+        }
+
+        .item-entry {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            margin: 0.5rem 0;
+        }
+
+        .total {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        h2, h3 {
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #4b5563;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="receipt-details">
+        <!-- Receipt content will be inserted here -->
+    </div>
+
+    <script>
+        window.onload = function() {
+        const receiptData = JSON.parse(localStorage.getItem('receiptData'));
+        const receiptContainer = document.getElementById('receipt-details');
+        
+        if (!receiptData) {
+            receiptContainer.innerHTML = '<h2>No receipt data found</h2>';
+            return;
+        }
+
+        let content = `
+            <h2>Payment Receipt</h2>
+            <p>Date: ${new Date().toLocaleDateString()}</p>
+            <p>Payment Method: ${receiptData.paymentMethod}</p>
+            <h3>Items Purchased:</h3>
+        `;
+
+        receiptData.items.forEach(item => {
+            content += `
+                <div class="item-entry">
+                    <p><strong>${item.name}</strong> x${item.quantity}</p>
+                    <p>Original Price: RM${item.originalPrice}</p>
+                    <p>Discount: ${item.discount}%</p>
+                    <p>Final Price: RM${item.finalPrice}</p>
+                </div>
+            `;
+        });
+
+        content += `
+            <div class="total">
+                <h3>Total Amount: RM${receiptData.totalPrice}</h3>
+            </div>
+        `;
+
+        receiptContainer.innerHTML = content;
+    };
+
+    </script>
+</body>
+</html>
